@@ -1,0 +1,86 @@
+<apex:page controller="reportResource" sideBar="false" standardStyleSheets="false">  
+    <style>
+        .header-cell {
+            background-color: #f3f3f3;
+            font-weight: normal;
+            padding: 0.1rem;
+            border: 1px solid #000;
+            text-align: left;
+        }
+        .data-cell {
+            padding: 0.1rem;
+            border: 1px solid #000;
+            text-align: left;
+        }
+        .total-cell {
+            background-color: #EEF7FC;
+            padding: 0.1rem;
+            border: 1px solid #000;
+            text-align: left;
+        }
+        .workgroup-cell {
+            text-align: right;
+            font-weight: normal;
+        }
+        .stage-header {
+            font-weight: bold;
+        }
+        .f6-cell {
+            background-color: #DDEEF6;
+        }
+    </style>
+    <apex:form id="reportForm">
+        <!-- Matrix Result PageBlock -->
+        <apex:pageBlock title="Matrix Result">
+            <!-- Display matrix data in a table -->
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="header-cell stage-header" scope="col">Work Group</th>
+                        <th class="header-cell stage-header" scope="col">Stage</th>
+                        <apex:repeat value="{!runListS}" var="stage">
+                            <th class="header-cell" scope="col">{!stage}</th>
+                        </apex:repeat>
+                        <th class="header-cell" scope="col">Totals</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat value="{!runListW}" var="workgroup">
+                        <tr class="slds-hint-parent">
+                            <th class="data-cell workgroup-cell" scope="row">{!workgroup}</th>
+                            <th class="data-cell" scope="row"></th>
+                            <apex:repeat value="{!runListS}" var="stage">
+                                <td class="data-cell">
+                                    <apex:outputText value="{0, number, currency}">
+                                        <apex:param value="{!counts[workgroup + '-' + stage]}" />
+                                    </apex:outputText>
+                                </td>
+                            </apex:repeat>
+                            <td class="total-cell f6-cell">
+                                <apex:outputText value="{0, number, currency}">
+                                    <apex:param value="{!workgroupTotals[workgroup]}" />
+                                </apex:outputText>
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                    <tr class="slds-hint-parent">
+                        <th class="data-cell" scope="row">Totals</th>
+                        <th class="data-cell" scope="row"></th>
+                        <apex:repeat value="{!runListS}" var="stage">
+                            <td class="total-cell">
+                                <apex:outputText value="{0, number, currency}">
+                                    <apex:param value="{!stageTotals[stage]}" />
+                                </apex:outputText>
+                            </td>
+                        </apex:repeat>
+                        <td class="total-cell">
+                            <apex:outputText value="{0, number, currency}">
+                                <apex:param value="{!total}" />
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
